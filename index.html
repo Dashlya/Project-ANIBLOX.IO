@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Klick das Quadrat</title>
+  <title>Klick das Quadrat - iPad Version</title>
   <style>
     body {
       text-align: center;
@@ -37,36 +37,45 @@
   const scoreDisplay = document.getElementById("score");
   let score = 0;
 
+  // Touch & Click Event
+  function increaseScore() {
+    score++;
+    scoreDisplay.textContent = score;
+    moveBox();
+  }
+  box.addEventListener("click", increaseScore);
+  box.addEventListener("touchstart", increaseScore);
+
+  // Box bewegen und schwieriger machen
   function moveBox() {
-    const x = Math.random() * 350;
-    const y = Math.random() * 350;
+    const size = Math.max(20, 50 - score); // wird kleiner mit mehr Punkten
+    box.style.width = size + "px";
+    box.style.height = size + "px";
+
+    const x = Math.random() * (350 - size);
+    const y = Math.random() * (350 - size);
     box.style.left = x + "px";
     box.style.top = y + "px";
   }
 
-  box.addEventListener("click", () => {
-    score++;
-    scoreDisplay.textContent = score;
-    moveBox();
-  });
-
   moveBox();
+
+  // Zeitlimit 30 Sekunden
+  let timeLeft = 30;
+  const timerDisplay = document.createElement("p");
+  timerDisplay.textContent = `Zeit: ${timeLeft}`;
+  document.body.insertBefore(timerDisplay, document.getElementById("game"));
+
+  const timer = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Zeit: ${timeLeft}`;
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      alert(`Game Over! Deine Punkte: ${score}`);
+      box.remove();
+    }
+  }, 1000);
 </script>
 
 </body>
 </html>
-
-let timeLeft = 30;
-const timerDisplay = document.createElement("p");
-timerDisplay.textContent = `Zeit: ${timeLeft}`;
-document.body.insertBefore(timerDisplay, document.getElementById("game"));
-
-const timer = setInterval(() => {
-    timeLeft--;
-    timerDisplay.textContent = `Zeit: ${timeLeft}`;
-    if(timeLeft <= 0){
-        clearInterval(timer);
-        alert(`Game Over! Deine Punkte: ${score}`);
-        box.remove();
-    }
-}, 1000);

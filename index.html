@@ -55,3 +55,18 @@
 
 </body>
 </html>
+
+let timeLeft = 30;
+const timerDisplay = document.createElement("p");
+timerDisplay.textContent = `Zeit: ${timeLeft}`;
+document.body.insertBefore(timerDisplay, document.getElementById("game"));
+
+const timer = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Zeit: ${timeLeft}`;
+    if(timeLeft <= 0){
+        clearInterval(timer);
+        alert(`Game Over! Deine Punkte: ${score}`);
+        box.remove();
+    }
+}, 1000);

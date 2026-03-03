@@ -1,26 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Klick das Quadrat - iPad Version</title>
+  <title>Klick das Quadrat - iPad Profi Version</title>
   <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-    }
-    #game {
-      width: 400px;
-      height: 400px;
-      border: 2px solid black;
-      margin: 20px auto;
-      position: relative;
-    }
-    #box {
-      width: 50px;
-      height: 50px;
-      background-color: red;
-      position: absolute;
-      cursor: pointer;
-    }
+    body { text-align: center; font-family: Arial; }
+    #game { width: 400px; height: 400px; border: 2px solid black; margin: 20px auto; position: relative; }
+    #box { width: 50px; height: 50px; background-color: red; position: absolute; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -37,30 +22,52 @@
   const scoreDisplay = document.getElementById("score");
   let score = 0;
 
-  // Touch & Click Event
+  // Highscore speichern
+  let highscore = localStorage.getItem('highscore') || 0;
+  const highscoreDisplay = document.createElement("p");
+  highscoreDisplay.textContent = `Highscore: ${highscore}`;
+  document.body.insertBefore(highscoreDisplay, document.getElementById("game"));
+
+  // Sound vorbereiten
+  const clickSound = new Audio('click.mp3'); // hochladen in dein Repo
+
+  // Zufällige Farbe
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for(let i=0;i<6;i++){ color += letters[Math.floor(Math.random()*16)]; }
+    return color;
+  }
+
+  // Score erhöhen + Farbe + Sound + Highscore
   function increaseScore() {
     score++;
     scoreDisplay.textContent = score;
+    box.style.backgroundColor = getRandomColor();
+    clickSound.play();
     moveBox();
+    if(score > highscore){
+      highscore = score;
+      localStorage.setItem('highscore', highscore);
+      highscoreDisplay.textContent = `Highscore: ${highscore}`;
+    }
   }
   box.addEventListener("click", increaseScore);
   box.addEventListener("touchstart", increaseScore);
 
   // Box bewegen und schwieriger machen
   function moveBox() {
-    const size = Math.max(20, 50 - score); // wird kleiner mit mehr Punkten
+    const size = Math.max(20, 50 - score);
     box.style.width = size + "px";
     box.style.height = size + "px";
-
     const x = Math.random() * (350 - size);
     const y = Math.random() * (350 - size);
     box.style.left = x + "px";
     box.style.top = y + "px";
   }
-
   moveBox();
 
-  // Zeitlimit 30 Sekunden
+  // Zeitlimit
   let timeLeft = 30;
   const timerDisplay = document.createElement("p");
   timerDisplay.textContent = `Zeit: ${timeLeft}`;
@@ -75,7 +82,7 @@
       box.remove();
     }
   }, 1000);
-</script>
 
+</script>
 </body>
 </html>
